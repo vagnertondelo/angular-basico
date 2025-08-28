@@ -24,8 +24,13 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
+
+           "styles": [
+            "src/custom-theme.scss",
+            "src/styles.css"
+          ],
+            "scripts": [
+
             ]
           },
           "configurations": {
@@ -88,5 +93,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

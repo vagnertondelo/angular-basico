@@ -1,0 +1,46 @@
+<h2 class="mb-3">Produtos</h2>
+
+<!-- Filtro / criação -->
+<div class="toolbar">
+  <mat-form-field appearance="outline" class="nome-field">
+    <mat-label>Nome do produto</mat-label>
+    <input matInput [(ngModel)]="novoNome" placeholder="Ex.: Teclado" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary"
+          (click)="adicionar()"
+          [disabled]="!(novoNome?.trim())">
+    Adicionar
+  </button>
+</div>
+
+<!-- Lista -->
+@if (produtos.length > 0) {
+  <mat-list>
+    @for (p of produtos; track p.id) {
+      <mat-list-item>
+        <!-- título/linha principal do item -->
+        <div matListItemTitle class="item-text">
+          {{ p.id }} — {{ p.nome }}
+        </div>
+
+        <!-- ação do lado oposto (direita) -->
+        <button mat-icon-button color="warn"
+                matListItemMeta
+                aria-label="Remover"
+                (click)="remover(p.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+    }
+  </mat-list>
+}
+
+<!-- Vazio -->
+@if (produtos.length === 0) {
+  <mat-card appearance="outlined" class="empty">
+    <mat-card-content>Nenhum produto cadastrado.</mat-card-content>
+  </mat-card>
+}

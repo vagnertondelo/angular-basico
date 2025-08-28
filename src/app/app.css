@@ -1,0 +1,23 @@
+/* limita a largura, como o .container do Bootstrap */
+.toolbar-container {
+  max-width: 1140px;   /* ajuste se quiser */
+  width: 100%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* tudo alinhado à esquerda */
+  gap: 24px;                    /* espaço entre brand e menu */
+}
+
+.brand { font-weight: 600; text-decoration: none; cursor: pointer; }
+
+/* tabs mais compactas (opcional) */
+/* .nav .mdc-tab { min-width: auto; } */
+
+/* conteúdo da página */
+.page-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 16px;
+}

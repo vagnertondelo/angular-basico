@@ -1,0 +1,21 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  max-width: 520px;
+}
+.nome-field { flex: 1; min-width: 260px; }
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.empty { padding: 8px 12px; }
+
+
+.item-text{
+  white-space: normal;     /* permite quebrar linha */
+  word-break: break-word;  /* evita cortar no meio sem quebrar */
+}
