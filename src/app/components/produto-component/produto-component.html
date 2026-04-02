@@ -1,12 +1,44 @@
 
 <h2 class="mb-3">Produtos</h2>
 
+@if (loading) { <div class="alert alert-info">Carregando...</div> }
+@if (erro)    { <div class="alert alert-danger">{{ erro }}</div> }
+@if (ok)    { <div class="alert alert-success">{{ ok }}</div> }
+<!-- @if (!loading && !erro && produtos.length === 0) {
+  <div class="alert alert-warning">Nenhum produto encontrado.</div>
+} -->
+
 <div class="row g-2 align-items-center mb-3">
   <div class="col-sm-6 col-md-4">
     <!-- Two-way binding: requer FormsModule importado no componente -->
     <input class="form-control"
            [(ngModel)]="novoNome"
            placeholder="Nome do produto">
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <!-- Two-way binding: requer FormsModule importado no componente -->
+    <input class="form-control"
+           [(ngModel)]="novoPreco"
+           placeholder="Preço do produto"
+           >
+  </div>
+   <div class="col-sm-6 col-md-4">
+    <!-- Two-way binding: requer FormsModule importado no componente -->
+    <input class="form-control"
+           [(ngModel)]="novaDescricao"
+           placeholder="Decrição do produto">
+  </div>
+   <!-- DROPDOWN DE LOJAS -->
+  <div class="col-sm-6 col-md-4">
+    <label class="form-label mb-1">Loja</label>
+    <select class="form-select"
+            name="loja"
+            [(ngModel)]="lojaSelecionadaId">
+      <option [ngValue]="null">Selecione...</option>
+      @for (loja of lojas; track loja.id) {
+        <option [value]="loja.id">{{ loja.nome }}</option>
+      }
+    </select>
   </div>
   <div class="col-auto">
     <button class="btn btn-primary" (click)="adicionar()">Adicionar</button>
@@ -16,8 +48,21 @@
 <ul class="list-group mb-3">
   @for (p of produtos; track p.id) {
     <li class="list-group-item d-flex justify-content-between align-items-center">
-      <span>{{ p.id }} — {{ p.nome }}</span>
-      <button class="btn btn-sm btn-outline-danger" (click)="remover(p.id)">Remover</button>
+      <span>{{ p.nome }} - {{ 'R$ '+ p.preco.toFixed(2) }} - {{ p.descricao }}</span>
+
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-sm btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal"
+                (click)="editItem = p">
+          Editar
+        </button>
+        <button class="btn btn-sm btn-outline-danger" (click)="remover(p.id)">
+          Remover
+        </button>
+      </div>
+
+
     </li>
   }
 </ul>
@@ -25,3 +70,69 @@
 @if (produtos.length === 0) {
   <div class="alert alert-info">Nenhum produto cadastrado.</div>
 }
+
+
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      @if (editItem) {
+        <form #f="ngForm" (ngSubmit)="salvarEdicao()">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Produto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <input class="form-control mb-2"
+                   name="nome"
+                   [(ngModel)]="editItem.nome"
+                   placeholder="Nome"
+                   required>
+
+            <input class="form-control mb-2"
+                   name="preco"
+                   type="number"
+                   step="0.01"
+                   [(ngModel)]="editItem.preco"
+                   placeholder="Preço"
+                   required>
+
+            <input class="form-control mb-3"
+                   name="descricao"
+                   [(ngModel)]="editItem.descricao"
+                   placeholder="Descrição">
+
+            <!-- Dropdown de Loja -->
+            <label class="form-label">Loja</label>
+            <select class="form-select"
+                    name="lojaId"
+                    [(ngModel)]="editItem.lojaId"
+                    required>
+              <option [ngValue]="null">Selecione...</option>
+              @for (loja of lojas; track loja.id) {
+                <option [value]="loja.id">{{ loja.nome }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+
+            <!-- Fechar ao enviar (sincrono). Se for HTTP, feche programaticamente após sucesso -->
+            <button type="submit"
+                    class="btn btn-primary"
+                    [disabled]="f.invalid"
+                    data-bs-dismiss="modal">
+              Salvar
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+</div>
+

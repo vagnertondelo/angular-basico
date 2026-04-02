@@ -1,37 +1,31 @@
+@if (!isAuthPage()) {
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
-  <img
-    src="/assets/serra.jpeg"
-    alt="Meu App"
-    class="img-fluid"
-  />
-  <span class="visually-hidden">Meu App</span> <!-- acessibilidade -->
-</a>
+      <img src="/assets/serra.jpeg" alt="Meu App" class="img-fluid" />
+      <span class="visually-hidden">Meu App</span>
+    </a>
 
     <div class="collapse navbar-collapse show">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link"
-             routerLink="/"
-             routerLinkActive="active">Home</a>
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"
-             routerLink="/produtos"
-             routerLinkActive="active">Produtos</a>
+          <a class="nav-link" routerLink="/produtos" routerLinkActive="active">Produtos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"
-             routerLink="/soma"
-             routerLinkActive="active">Soma</a>
+          <a class="nav-link" routerLink="/loja" routerLinkActive="active">Loja</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+}
 
-<!-- Faz pagina navegar entre si -->
 <main class="container py-4">
   <router-outlet></router-outlet>
 </main>

@@ -1,62 +1,38 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ProdutoModel } from '../../models/porduto-model';
-import { ProdutoService } from '../../services/produto-service/produto-service';
-import { FormsModule } from '@angular/forms';
-import { LojaModel } from '../../models/loja-model';
+import { Component, inject } from '@angular/core';
 import { LojaService } from '../../services/loja-service/loja-service';
-
+import { LojaModel } from '../../models/loja-model';
+import { FormsModule } from '@angular/forms';
+import { ProdutoModel } from '../../models/porduto-model';
 
 @Component({
-  selector: 'app-produto-component',
+  selector: 'app-loja-component',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './produto-component.html',
-  styleUrl: './produto-component.css'
+  templateUrl: './loja-component.html',
+  styleUrl: './loja-component.css'
 })
-export class ProdutoComponent  implements OnInit{
- private service = inject(ProdutoService);
-  private serviceLoja = inject(LojaService);
+export class LojaComponent {
 
-  produtos: ProdutoModel[] = [];
+private service = inject(LojaService);
+
   lojas: LojaModel[] = [];
   // editItem: Partial<ProdutoModel> | null = null;
-  editItem: ProdutoModel | null = null;
+  editItem: LojaModel | null = null;
   novoNome = '';
-  novoPreco ='';
-  novaDescricao='';
+  novoCnpj ='';
+  novaEndereco='';
   ok = '';
   loading = false;
-  lojaSelecionadaId = '';
 
   erro = '';
   busca = '';
 
-  ngOnInit() { this.carregar(); this.carregarLoja(); }
+  ngOnInit() { this.carregar(); }
 
   carregar() {
     this.loading = true;
     this.erro = '';
    this.service.listar()
-      // Faz a inscrição (subscribe) para reagir ao resultado do Observable
-      .subscribe({
-        // 'next' é chamado quando a resposta chega com sucesso
-        next: d => {
-          this.produtos = d;     // atualiza a lista exibida na tela
-          this.loading = false;  // desliga o estado de carregamento
-        },
-        // 'error' é chamado se a requisição falhar (rede, 4xx/5xx, etc.)
-        error: e => {
-          this.erro = e.message; // guarda a mensagem para exibir ao usuário
-          this.loading = false;  // desliga o estado de carregamento também no erro
-        }
-        // (opcional) complete: () => { ... } // chamado quando o Observable completa
-      });
-  }
-
-  carregarLoja() {
-    this.loading = true;
-    this.erro = '';
-   this.serviceLoja.listar()
       // Faz a inscrição (subscribe) para reagir ao resultado do Observable
       .subscribe({
         // 'next' é chamado quando a resposta chega com sucesso
@@ -73,43 +49,36 @@ export class ProdutoComponent  implements OnInit{
       });
   }
 
-
-
-
   adicionar() {
       this.erro = '';
     // validações simples
-    const precoNum = Number(this.novoPreco);
+
     if (!this.novoNome.trim()) {
       this.erro = 'Informe o nome.';
       return;
     }
-    if (!this.novaDescricao.trim()) {
-      this.erro = 'Informe a descrição.';
-      return;
-    }
-    if (Number.isNaN(precoNum) || precoNum < 0) {
-      this.erro = 'Preço inválido.';
+    if (!this.novoCnpj.trim()) {
+      this.erro = 'Informe o CNPJ.';
       return;
     }
 
-    const payload: ProdutoModel = {
+
+    const payload: LojaModel = {
       id:'',
       nome: this.novoNome.trim(),
-      descricao: this.novaDescricao.trim(),
-      preco: Number(this.novoPreco),
-      lojaId: this.lojaSelecionadaId.trim()
+      endereco: this.novaEndereco.trim(),
+      cnpj: this.novoCnpj.trim(),
     };
 
     this.loading = true;
     this.service.adicionar(payload).subscribe({
       next: (p) => {
-        this.ok = `Produto "${p.nome}" cadastrado!`;
+        this.ok = `Loja "${p.nome}" cadastrado!`;
         this.loading = false;
         // limpa o formulário
         this.novoNome = '';
-        this.novaDescricao = '';
-        this.novoPreco = '';
+        this.novaEndereco = '';
+        this.novoCnpj = '';
         this.carregar();
           // temporizador: some depois de 3s
             setTimeout(() => this.ok = '', 3000);
@@ -148,7 +117,7 @@ export class ProdutoComponent  implements OnInit{
         next: result => {
           if (result) {
             this.carregar(); // primeiro recarrega
-            this.ok = 'Produto atualizado com sucesso!'; // só depois mostra
+            this.ok = 'Loja atualizado com sucesso!'; // só depois mostra
             setTimeout(() => this.ok = '', 3000);
           }
         },
@@ -159,6 +128,17 @@ export class ProdutoComponent  implements OnInit{
       });
     }
 
+
+    openLojaId: string | null = null;
+
+    toggleProdutos(id: string) {
+      this.openLojaId = this.openLojaId === id ? null : id;
+    }
+
+    selecionarProduto(prod: ProdutoModel) {
+
+      console.log('Produto selecionado', prod);
+    }
 
 
 }

@@ -1,0 +1,52 @@
+<!-- recuperar-senha-component.html -->
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-6 col-lg-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+
+          <h3 class="mb-3 text-center">Recuperar senha</h3>
+
+          @if (loading) { <div class="alert alert-info py-2">Enviando instruções…</div> }
+          @if (erro)    { <div class="alert alert-danger py-2">{{ erro }}</div> }
+          @if (ok)      { <div class="alert alert-success py-2">{{ ok }}</div> }
+
+          <div class="mb-3">
+            <label class="form-label" for="email">E-mail</label>
+            <input
+              id="email"
+              class="form-control"
+              type="email"
+              placeholder="seu@email.com"
+              [(ngModel)]="email"
+              [disabled]="loading"
+              (keyup.enter)="recuperar()"
+            />
+            <div class="form-text">Informe o e-mail cadastrado para receber o link.</div>
+          </div>
+
+          <button
+            class="btn btn-primary w-100"
+            (click)="recuperar()"
+            [disabled]="loading || !email"
+          >
+            @if (loading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            }
+            Enviar link de recuperação
+          </button>
+
+          <div class="text-center mt-3">
+            <a class="small" routerLink="/login">Voltar ao login</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- dica opcional de suporte -->
+      <p class="text-center text-muted small mt-3">
+        Não recebeu o e-mail? Verifique a caixa de spam.
+      </p>
+    </div>
+  </div>
+</div>

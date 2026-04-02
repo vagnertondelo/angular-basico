@@ -1,0 +1,149 @@
+
+<h2 class="mb-3">Lojas</h2>
+
+@if (loading) { <div class="alert alert-info">Carregando...</div> }
+@if (erro)    { <div class="alert alert-danger">{{ erro }}</div> }
+@if (ok)    { <div class="alert alert-success">{{ ok }}</div> }
+<!-- @if (!loading && !erro && produtos.length === 0) {
+  <div class="alert alert-warning">Nenhum produto encontrado.</div>
+} -->
+
+<div class="row g-2 align-items-center mb-3">
+  <div class="col-sm-6 col-md-4">
+    <!-- Two-way binding: requer FormsModule importado no componente -->
+    <input class="form-control"
+           [(ngModel)]="novoNome"
+           placeholder="Nome da Loja">
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <!-- Two-way binding: requer FormsModule importado no componente -->
+    <input class="form-control"
+           [(ngModel)]="novaEndereco"
+           placeholder="Endereço da Loja"
+           >
+  </div>
+   <div class="col-sm-6 col-md-4">
+    <!-- Two-way binding: requer FormsModule importado no componente -->
+    <input class="form-control"
+           [(ngModel)]="novoCnpj"
+           placeholder="CNPJ da Loja">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" (click)="adicionar()">Adicionar</button>
+  </div>
+</div>
+
+<!-- Lojas em cards -->
+<div class="lojas">
+  @for (loja of lojas; track loja.id) {
+    <div class="card shadow-sm mb-3">
+      <!-- Cabeçalho da loja -->
+      <div class="card-header bg-body d-flex flex-wrap justify-content-between align-items-center">
+        <div class="d-flex flex-column">
+          <div class="fw-semibold">
+            {{ loja.nome }}
+            <span class="badge rounded-pill text-bg-secondary ms-2">
+              {{ loja.produtos?.length || 0 }} produtos
+            </span>
+          </div>
+          <small class="text-muted">
+            CNPJ: {{ loja.cnpj }} • {{ loja.endereco }}
+          </small>
+        </div>
+
+        <div class="mt-2 mt-sm-0 d-flex gap-2">
+          <button type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="toggleProdutos(loja.id)">
+            <span [class.rotate-180]="openLojaId === loja.id">▾</span>
+            <span class="ms-1">Produtos</span>
+          </button>
+
+          <button class="btn btn-sm btn-warning"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editModal"
+                  (click)="editItem = loja">
+            Editar
+          </button>
+
+          <button class="btn btn-sm btn-outline-danger"
+                  (click)="remover(loja.id)">
+            Remover
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de produtos (colapsável) -->
+      <div class="collapse" [class.show]="openLojaId === loja.id">
+        <div class="card-body p-0">
+          @if (loja.produtos?.length) {
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th style="width:40%">Produto</th>
+                    <th>Descrição</th>
+                    <th class="text-end" style="width:20%">Preço</th>
+                    <th style="width:1%"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (prod of (loja.produtos ?? []); track prod.id) {
+                    <tr>
+                      <td class="fw-medium">{{ prod.nome }}</td>
+                      <td class="text-muted small">{{ prod.descricao }}</td>
+                      <td class="text-end">
+                        {{ prod.preco.toFixed(2) }}
+                      </td>
+                      <td class="text-nowrap">
+                        <!-- ações por produto (opcional) -->
+                        <button class="btn btn-sm btn-outline-secondary"
+                                (click)="selecionarProduto(prod)">
+                          Ver
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="p-3 text-muted">Sem produtos cadastrados.</div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+
+@if (lojas.length === 0) {
+  <div class="alert alert-info">Nenhum produto cadastrado.</div>
+}
+
+
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+     @if (editItem) {
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Produto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input class="form-control mb-2" [(ngModel)]="editItem.nome" placeholder="Nome">
+          <input class="form-control mb-2"  [(ngModel)]="editItem.cnpj" placeholder="CNPJ">
+          <input class="form-control" [(ngModel)]="editItem.endereco" placeholder="Endereço">
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-primary" (click)="salvarEdicao()" data-bs-dismiss="modal">Salvar</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
